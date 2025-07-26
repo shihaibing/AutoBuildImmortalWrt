@@ -1,5 +1,5 @@
 ## ImmortalWrt for 斐讯N1
-#### luci版本 24.10.2 固件最终格式是ext4 不是squashfs
+#### luci版本 24.10.2 固件不是传统ext4和squashfs格式 而是btrfs格式 
 #### 后台地址 `没有没有没有,需查询` 详见下文
 #### 用户名 `root` 密码：无
 #### 是否带docker: 根据用户选择
