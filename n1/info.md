@@ -1,13 +1,13 @@
 ## ImmortalWrt for 斐讯N1
 #### luci版本 24.10.2 固件不是传统ext4和squashfs格式 而是btrfs格式 
 #### 后台地址 `没有没有没有,需查询` 详见下文
-#### 用户名 `root` 密码：无
+#### 用户名 `root` 密码：password
 #### 是否带docker: 根据用户选择
 #### 默认软件包大小 1GB/根据用户选择
 #### 内核版本:根据用户选择
 #### 晶晨宝盒：✅ 自带 用于写入emmc 写入的时候务必关闭docker 和docker自启动 （这一步等以后稳定再考虑写入 非必要不写入）
 #### rootfs.tar.gz 构建采用ImmortalWrt的ImageBuilder
-#### 打包img 采用`onhub/amlogic-s9xxx-openwrt`
+#### 打包img 采用`onhub/amlogic-s9xxx-openwrt` 或 `flippy-openwrt-actions`
 
 ### 斐讯N1为单网口设备 网线接上路由器 启动后默认是自动获取ip的模式<br> 请在上级路由器的dhcp列表中查询具体的局域网ip
 ### 若后续想设置其他ip或者旁路 请在web页面自行设置即可 <br> 总之 这个逻辑就是默认让它有网 和 普通电脑、NAS 无异
