@@ -80,14 +80,6 @@ jobs:
           done
           ls ${{ github.workspace }}/bin/targets/bcm27xx/${{ env.cpu }}
       
-      - name: Generate Firmware SHA-256
-        run: |
-          cp ${{ github.workspace }}/bin/targets/bcm27xx/${{ env.cpu }}/*squashfs-factory.img.gz  ${{ github.workspace }}
-          for file in *squashfs-factory.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
-      
       - name: Create info
         run: |
           if [ "${{ github.event.inputs.include_docker }}" == "yes" ]; then
@@ -103,8 +95,7 @@ jobs:
           tag_name: Autobuild-raspberrypi
           body_path: ${{ github.workspace }}/info.md
           files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.sha256
+            ${{ github.workspace }}/bin/targets/bcm27xx/${{ env.cpu }}/*squashfs-factory.img.gz
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

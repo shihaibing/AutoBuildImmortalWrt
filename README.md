@@ -6,23 +6,16 @@
 ## 🤔 这是什么？
 它是一个工作流。可快速构建 带docker且支持自定义固件大小的 immortalWrt
 > 1、支持自定义固件大小 默认1GB <br>
-> 2、支持预安装docker（可选）<br>
-> 3、目前支持x86-64 和 rockchip 两个平台（后续会增加）<br>
-> 4、新增支持MT3000/MT2500/MT6000/B2200（docker可选）<br>
-> 5、新增全志平台R1S、香橙派Zero3等机型的工作流<br>
-> 6、新增用户预设置pppoe拨号功能<br>
-> 7、新增树莓派①②③④⑤<br>
-> 8、新增第三方软件包的集成功能 https://github.com/wukongdaily/AutoBuildImmortalWrt/discussions/209 <br>
-> 9、MT2500 和 MT6000 支持第三方插件的按需集成<br>
-> 10、新增:斐讯N1 的工作流<br>
-> 11、新增:Radxa [- e25 - e52c](https://github.com/wukongdaily/AutoBuildImmortalWrt/commit/34be59934a0d6d2e272ef561b7bfd07ddc7f180f) 等机型  <br>
+> 2、支持可选预安装docker（可选）<br>
+> 3、支持按需增加第三方软件<br>
+> 4、点击这里查看👉🏻[全部支持的机型列表](https://github.com/wukongdaily/AutoBuildImmortalWrt/blob/master/SUPPORT.md) 👈🏻
 
 
 
 ## 如何查询imm仓库内有哪些插件
 https://mirrors.sjtug.sjtu.edu.cn/immortalwrt/releases/24.10.2/packages/x86_64/luci/
 ## 如何查询imm仓库外目前可以集成哪些插件
-https://github.com/wukongdaily/store/tree/master/run
+https://github.com/wukongdaily/store
 > 具体方法 https://github.com/wukongdaily/AutoBuildImmortalWrt/discussions/209
 ## 【视频教程】如何集成第三方插件？
 https://www.youtube.com/watch?v=KN6AJYV1hBI <br>

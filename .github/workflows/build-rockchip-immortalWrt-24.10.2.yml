@@ -57,6 +57,15 @@ on:
         description: '设置软件包大小 单位(MB)'
         required: true
         default: '1024'
+      include_docker:
+        description: |
+          是否编译 Docker 插件
+        required: true
+        default: 'yes'
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
       enable_pppoe:
         description: "是否配置PPPoE拨号信息?"
         required: true
@@ -81,7 +90,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set executable permissions
-        run: chmod +x ${{ github.workspace }}/rockchip/build.sh
+        run: chmod +x ${{ github.workspace }}/rockchip/build24.sh
       
       - name: Validate PPPoE Inputs
         run: |
@@ -96,6 +105,7 @@ jobs:
       - name: Building Rockchip ImmortalWrt
         run: |
           profiles="${{ github.event.inputs.profile }}"
+          include_docker="${{ github.event.inputs.include_docker }}"
           rootfs_partsize="${{ github.event.inputs.rootfs_partsize }}"
           
           IFS=',' read -r -a profile_array <<< "$profiles"
@@ -110,21 +120,16 @@ jobs:
               -v "${{ github.workspace }}/arch/arch.conf:/home/build/immortalwrt/files/etc/opkg/arch.conf" \
               -v "${{ github.workspace }}/rockchip/imm.config:/home/build/immortalwrt/.config" \
               -v "${{ github.workspace }}/shell:/home/build/immortalwrt/shell" \
-              -v "${{ github.workspace }}/rockchip/build.sh:/home/build/immortalwrt/build.sh" \
+              -v "${{ github.workspace }}/rockchip/build24.sh:/home/build/immortalwrt/build.sh" \
               -e PROFILE=$profile \
+              -e INCLUDE_DOCKER=$include_docker \
               -e ROOTFS_PARTSIZE=$rootfs_partsize \
               -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
               -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
               -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
               immortalwrt/imagebuilder:rockchip-armv8-openwrt-24.10.2 /bin/bash /home/build/immortalwrt/build.sh
           done
-      - name: Generate Firmware SHA-256
-        run: |
-          cp ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz ${{ github.workspace }}
-          for file in *.img.gz; do
-            sha256sum "$file" > "$file.sha256"
-            sha256sum -c "$file.sha256"
-          done
+    
 
       - name: Upload ImmortWrt as release assets
         uses: softprops/action-gh-release@v2.2.1
@@ -133,8 +138,7 @@ jobs:
           name: ImmortWrt-Rockchip
           body_path: ${{ github.workspace }}/info.md
           files: |
-            ${{ github.workspace }}/*.img.gz
-            ${{ github.workspace }}/*.sha256
+            ${{ github.workspace }}/bin/targets/rockchip/armv8/*.img.gz
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
