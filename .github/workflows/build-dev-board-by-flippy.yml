@@ -5,7 +5,7 @@ on:
       openwrt_kernel:
         description: "选择构建的内核 当高版本内核没有时 系统会自动挑选匹配的内核。比如radxa e52c 即便你选择了6.1.y 可能最终构建还是5.10.160"
         required: false
-        default: "6.6.y"
+        default: "6.1.y"
         type: choice
         options:
           - 5.4.y
@@ -17,7 +17,7 @@ on:
       openwrt_soc:
         description: "选择开发板型号"
         required: false
-        default: "e25"
+        default: "e20c"
         type: choice
         options:
           - e20c
@@ -144,13 +144,14 @@ jobs:
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
 
       - name: Package armsr-armv8 as ImmortalWrt for Radxa
-        uses: ophub/flippy-openwrt-actions@main
+        uses: wukongdaily/flippy-openwrt-actions@kernel-6.1
         if: ${{ steps.down.outputs.status }} == 'success' && !cancelled()
         env:
           OPENWRT_ARMVIRT: ${{ steps.find_rootfs.outputs.file }}
           PACKAGE_SOC: ${{ inputs.openwrt_soc }}
           KERNEL_VERSION_NAME: ${{ inputs.openwrt_kernel }}
           KERNEL_AUTO_LATEST: true
+          KERNEL_REPO_URL: "ophub/kernel"
           WHOAMI: ${{ inputs.builder_name }}
 
       - name: Rename .img.gz file
