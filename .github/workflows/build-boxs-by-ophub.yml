@@ -134,6 +134,7 @@ on:
           - s905x3-x96air
           - s905x3-x96air-gb
           - s905x3-x96max
+          - s905x2-hg680fj
           - s912
           - s912-h96pro-plus
           - s912-m8s-pro

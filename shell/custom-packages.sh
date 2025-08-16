@@ -1,6 +1,7 @@
 #!/bin/bash
 # ============= imm仓库外的第三方插件==============
 # ============= 若启用 则打开注释 ================
+# 注意如果构建MT7621平台的路由器的固件 请不要集成第三方软件 因为这里的软件都是aarch64_cortex-a53 或 aarch64_generic 不是MIPS 1004Kc平台的
 # istore商店
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-store"
 # 首页和网络向导
