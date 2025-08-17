@@ -19,6 +19,11 @@ on:
           - pine64_pine64-plus
           - pine64_sopine-baseboard
         default: xunlong_orangepi-zero3
+      enable_store:
+        description: "集成 store 商店"
+        required: false
+        type: boolean
+        default: true
       include_docker:
         description: |
           是否编译 Docker 插件
@@ -45,6 +50,15 @@ jobs:
       - name: Set executable permissions
         run: |
           chmod +x ${{ github.workspace }}/sunxi-cortexa53/build24.sh
+      
+      - name: Enable Store integration
+        run: |
+          if [ "${{ github.event.inputs.enable_store }}" == "true" ]; then
+            echo 'CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-store"' >> shell/custom-packages.sh
+            echo "✅ 已追加 luci-app-store"
+          else
+            echo "❎ 未启用 luci-app-store"
+          fi
       
       - name: Build sunxi-cortexa53 ImmpotalWrt 24.10.2
         run: |

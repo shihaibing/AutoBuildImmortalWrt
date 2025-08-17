@@ -448,11 +448,51 @@ on:
           - zyxel_nwa55axe
           - zyxel_wap6805
           - zyxel_wsm20
+          # 新增斐讯K3 AC88U等 bcm53xx/generic 平台
+          - phicomm_k3
+          - asus_rt-ac3100
+          - asus_rt-ac56u
+          - asus_rt-ac68u
+          - asus_rt-ac87u
+          - asus_rt-ac88u
+          - asus_rt-n18u
+          - buffalo_wxr-1900dhp
+          - buffalo_wzr-1750dhp
+          - buffalo_wzr-600dhp2
+          - buffalo_wzr-900dhp
+          - dlink_dir-885l
+          - dlink_dir-890l
+          - dlink_dwl-8610ap
+          - linksys_ea6300-v1
+          - linksys_ea6500-v2
+          - linksys_ea9200
+          - linksys_ea9500
+          - luxul_abr-4500
+          - luxul_xap-1610
+          - luxul_xbr-4500
+          - luxul_xwr-3150
+          - meraki_mr26
+          - meraki_mr32
+          - meraki_mx64
+          - meraki_mx64_a0
+          - meraki_mx65
+          - netgear_r6250
+          - netgear_r6300-v2
+          - netgear_r7000
+          - netgear_r7900
+          - netgear_r8000
+          - smartrg_sr400ac
+          - tenda_ac9
         default: glinet_gl-mt6000
       custom_router_ip:
         description: "请设置路由器的管理地址 格式:192.168.x.1 或 10.x.x.1"
         required: true
         default: "192.168.100.1"
+      enable_store:
+        description: "集成 store 商店"
+        required: false
+        type: boolean
+        default: false
       include_docker:
         description: |
           是否编译 Docker 插件
@@ -506,6 +546,15 @@ jobs:
               exit 1
             fi
           fi
+      
+      - name: Enable Store integration
+        run: |
+          if [ "${{ github.event.inputs.enable_store }}" == "true" ]; then
+            echo 'CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-store"' >> shell/custom-packages.sh
+            echo "✅ 已追加 luci-app-store"
+          else
+            echo "❎ 未启用 luci-app-store"
+          fi
 
 
       - name: Build Wireless ImmortalWrt 24.10.2
@@ -513,6 +562,7 @@ jobs:
           profile="${{ github.event.inputs.profile }}"
           echo "Building for profile: $profile"
           include_docker="${{ github.event.inputs.include_docker }}"
+          # 默认平台
           echo "platform=mediatek/filogic" >> $GITHUB_ENV
 
           # 读取 ipq807x 机型文件
@@ -529,6 +579,14 @@ jobs:
           if [[ "$profile" =~ ^($mt7621_models)$ ]]; then
               case_tag="ramips-mt7621-openwrt-24.10.2"
               case_platform="ramips/mt7621"
+          fi
+
+          # 读取 bcm53xx/generic 机型文件
+          bcm53xx_models=$(cat model/bcm53xx.txt | tr '\n' '|')
+          bcm53xx_models=${bcm53xx_models%|}
+          if [[ "$profile" =~ ^($bcm53xx_models)$ ]]; then
+              case_tag="bcm53xx-generic-openwrt-24.10.2"
+              case_platform="bcm53xx/generic"
           fi
 
           # 判断机型
@@ -564,7 +622,7 @@ jobs:
                   cp ${{ github.workspace }}/mediatek-filogic/build23.sh ${{ github.workspace }}/mediatek-filogic/build24.sh
                   ;;
               *)
-                  # 如果前面匹配了 ipq807x 或 mt7621 文件，则使用对应 tag
+                  # 如果前面匹配了 ipq807x、mt7621、bcm53xx 机型文件，则使用对应 tag
                   if [[ -n "$case_tag" ]]; then
                       tag=$case_tag
                       echo "platform=$case_platform" >> $GITHUB_ENV
@@ -575,8 +633,6 @@ jobs:
                   ;;
             esac
           
-
-
             docker run --rm -i \
               --user root \
               -v "${{ github.workspace }}/bin:/home/build/immortalwrt/bin" \

@@ -90,6 +90,11 @@ on:
         options:
           - 'yes'
           - 'no'
+      enable_store:
+        description: "集成 store 商店"
+        required: false
+        type: boolean
+        default: true
       skip_imagebuilder:
         description: "直接使用底包快速构建固件, 忽略自定义插件 ----（跳过 ImageBuilder）"
         required: false
@@ -124,6 +129,15 @@ jobs:
 
       - name: Debug workspace contents
         run: ls -R
+      
+      - name: Enable Store integration
+        run: |
+          if [ "${{ github.event.inputs.enable_store }}" == "true" ]; then
+            echo 'CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-store"' >> shell/custom-packages.sh
+            echo "✅ 已追加 luci-app-store"
+          else
+            echo "❎ 未启用 luci-app-store"
+          fi
 
       - name: 处理是否替换 banner 信息
         if: ${{ github.event.inputs.skip_imagebuilder == 'false' && github.event.inputs.replace_banner == 'true' }}
